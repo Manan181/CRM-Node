@@ -1,0 +1,35 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "node": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "overrides": [],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "requireConfigFile": false
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "prefer-template": "error",
+        "no-undef": "error",
+        "new-cap": "off",
+        "no-useless-escape": "off",
+        "no-unused-vars": "error",
+        "no-duplicate-imports": "error",
+        "no-useless-return": "error",
+        "no-unused-expressions": "error",
+        "no-multiple-empty-lines": "error",
+        "eqeqeq": "error",
+        "no-console": "warn",
+        "consistent-return": "error"
+    },
+    "plugins": [
+        "prettier"
+    ]
+}
