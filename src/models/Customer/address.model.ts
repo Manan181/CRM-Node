@@ -1,9 +1,8 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const AddressSchema: Schema = new Schema({
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'Customer Id is required'],
     ref: 'customer'
   },
   street: {

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import Address from './address.model';
 
 const invoiceSchema: Schema = new Schema(
@@ -6,34 +6,34 @@ const invoiceSchema: Schema = new Schema(
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, 'Customer Id is required'],
-      ref: 'customer',
+      ref: 'customer'
     },
     billTo: Address,
     shipTo: Address,
     invoiceNumber: {
       type: String,
-      required: [true, 'Invoice Number is required'],
+      required: [true, 'Invoice Number is required']
     },
     invoiceDate: {
       type: Date,
-      required: [true, 'Invoice Date is required'],
+      required: [true, 'Invoice Date is required']
     },
     dueDate: {
       type: Date,
-      required: [true, 'Due Date is required'],
+      required: [true, 'Due Date is required']
     },
     preventOverdueReminders: {
       type: Boolean,
-      default: false,
+      default: false
     },
     tags: [], // To-Do
     paymentModes: [], // To-Do
     currency: {
       type: String,
       default: 'USD',
-      enum: ['USD', 'EUR'],
+      enum: ['USD', 'EUR']
     },
-    saleAgent: {}, // To-Do
+    saleAgent: {} // To-Do
   },
   { timestamps: true }
 );

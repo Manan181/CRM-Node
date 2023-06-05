@@ -31,10 +31,11 @@ export class App {
         next();
       }
     });
-    this.app.use('/api/', CustomerRoutes);
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static('public'));
+    this.app.get('/ping', (req: Request, res: Response) => res.json({ message: 'pong' }));
+    this.app.use('/api/', CustomerRoutes);
     this.app.listen(PORT, () => {
       this.logger.info(`The server is running in port localhost: ${config.port}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
@@ -46,6 +47,5 @@ export class App {
         next();
       });
     });
-    this.app.get('/ping', (req: Request, res: Response) => res.json({ message: 'pong' }));
   }
 }

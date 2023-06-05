@@ -26,8 +26,7 @@
         "no-unused-expressions": "error",
         "no-multiple-empty-lines": "error",
         "eqeqeq": "error",
-        "no-console": "warn",
-        "consistent-return": "error"
+        "no-console": "warn"
     },
     "plugins": [
         "prettier"
