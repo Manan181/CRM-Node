@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import permissions from '../permissions.model';
 
 const staffSchema: Schema = new Schema(
   {
@@ -64,7 +63,7 @@ const staffSchema: Schema = new Schema(
       type: String,
       required: true
     },
-    permissions: permissions
+    permissions: [{}]
   },
   { timestamps: true }
 );

@@ -6,6 +6,7 @@ import { Log } from './helpers/logger';
 import { SendEmail } from './helpers/sendEmail';
 import { config } from './config/config';
 import CustomerRoutes from './routes/Customer/customer.route';
+import { errResponse } from './helpers/utils';
 
 dotenv.config();
 
@@ -40,7 +41,7 @@ export class App {
       this.logger.info(`The server is running in port localhost: ${config.port}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
         if (err) {
-          res.status(500).json({ error: req.t('ERR_INTERNAL_SERVER') });
+          errResponse(500, 'Internal Server Error');
           SendEmail.sendEmail(null, null, [config.exceptionMail], `Admin API (${NODE_ENV}) - Unhandled Crash`, err.stack); // sending exception email
           return;
         }

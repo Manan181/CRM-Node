@@ -1,10 +1,6 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 
 const AddressSchema: Schema = new Schema({
-  customerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'customer'
-  },
   street: {
     type: String,
     maxlength: 100
