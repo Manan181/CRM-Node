@@ -1,12 +1,12 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import Address from './address.model';
 
 const invoiceSchema: Schema = new Schema(
   {
     customerId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, 'Customer Id is required'],
-      ref: 'customer'
+      ref: 'Customer'
     },
     billTo: Address,
     shipTo: Address,
@@ -38,4 +38,4 @@ const invoiceSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('invoice', invoiceSchema);
+export default model('Invoice', invoiceSchema);

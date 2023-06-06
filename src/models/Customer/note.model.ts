@@ -1,11 +1,11 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const noteSchema: Schema = new Schema(
   {
     customerId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, 'Customer Id is required'],
-      ref: 'customer'
+      ref: 'Customer'
     },
     noteDescription: {
       type: String,
@@ -15,4 +15,4 @@ const noteSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('note', noteSchema);
+export default model('Note', noteSchema);

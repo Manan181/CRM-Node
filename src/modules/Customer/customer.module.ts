@@ -3,6 +3,7 @@ import { Request } from 'express';
 import mongoose from 'mongoose';
 import { Log } from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
+
 export class customerModule {
   private static logger: any = Log.getLogger();
 

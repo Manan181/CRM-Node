@@ -6,6 +6,8 @@ import { Log } from './helpers/logger';
 import { SendEmail } from './helpers/sendEmail';
 import { config } from './config/config';
 import CustomerRoutes from './routes/Customer/customer.route';
+import StaffRoutes from './routes/Staff/staff.route';
+import RoleRoutes from './routes/Roles/roles.route';
 import { errResponse } from './helpers/utils';
 
 dotenv.config();
@@ -36,7 +38,9 @@ export class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static('public'));
     this.app.get('/ping', (req: Request, res: Response) => res.json({ message: 'pong' }));
-    this.app.use('/api/', CustomerRoutes);
+    this.app.use('/api/customers/', CustomerRoutes);
+    this.app.use('/api/staff/', StaffRoutes);
+    this.app.use('/api/roles/', RoleRoutes);
     this.app.listen(PORT, () => {
       this.logger.info(`The server is running in port localhost: ${config.port}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
