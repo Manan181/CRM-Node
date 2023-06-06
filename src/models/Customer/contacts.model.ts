@@ -1,11 +1,11 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const permissions: Schema = new Schema(
   {
     customerId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, 'Customer Id is required'],
-      ref: 'customer'
+      ref: 'Customer'
     },
     isPrimary: {
       type: Boolean,
@@ -45,7 +45,7 @@ const permissions: Schema = new Schema(
   { timestamps: true }
 );
 
-const emailNotifications = new mongoose.Schema(
+const emailNotifications = new Schema(
   {
     invoice: {
       type: Boolean,
@@ -86,12 +86,12 @@ const emailNotifications = new mongoose.Schema(
   { timestamps: true }
 );
 
-const contactsSchema = new mongoose.Schema(
+const contactsSchema = new Schema(
   {
     customerId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, 'Customer Id is required'],
-      ref: 'customer'
+      ref: 'Customer'
     },
     profileImage: {
       type: String,
@@ -139,4 +139,4 @@ const contactsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('contact', contactsSchema);
+export default model('Contact', contactsSchema);

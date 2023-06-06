@@ -1,12 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
-import permissions from '../permissions.model';
+import Permissions from '../permissions.model';
+
+const permissionsSchema = {
+  permissions: Permissions
+};
 
 const staffSchema: Schema = new Schema(
   {
-    profileImage: {
-      type: String,
-      required: false
-    },
+    profileImage: String,
     firstName: {
       type: String,
       required: true
@@ -20,53 +21,29 @@ const staffSchema: Schema = new Schema(
       required: true,
       unique: true
     },
-    hourlyRate: {
-      type: Number,
-      required: false
-    },
-    phone: {
-      type: Number,
-      required: false
-    },
-    facebookUrl: {
-      type: String,
-      required: false
-    },
-    linkedinUrl: {
-      type: String,
-      required: false
-    },
-    skypeUrl: {
-      type: String,
-      required: false
-    },
-    defaultLanguage: {
-      type: String,
-      required: false
-    },
-    emailSignature: {
-      type: String,
-      required: false
-    },
-    direction: {
-      type: String,
-      required: false
-    },
-    isAdmintrator: {
-      type: Boolean,
-      required: false
-    },
-    sendWelcomeEmail: {
-      type: Boolean,
-      required: false
-    },
+    hourlyRate: Number,
+    phone: Number,
+    facebookUrl: String,
+    linkedinUrl: String,
+    skypeUrl: String,
+    defaultLanguage: String,
+    emailSignature: String,
+    direction: String,
+    isAdmintrator: Boolean,
+    sendWelcomeEmail: Boolean,
     password: {
       type: String,
       required: true
     },
-    permissions: permissions
+    role: {
+      type: Schema.Types.ObjectId,
+      ref: 'Role',
+      required: false
+    }
   },
   { timestamps: true }
 );
 
-export default mongoose.model('staff', staffSchema);
+staffSchema.add(permissionsSchema);
+
+export default mongoose.model('Staff', staffSchema);

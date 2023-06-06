@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import Address from './address.model';
 
 const customerSchema: Schema = new Schema(
@@ -51,4 +51,4 @@ const customerSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('customer', customerSchema);
+export default model('Customer', customerSchema);
