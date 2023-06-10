@@ -11,12 +11,12 @@ class staffModule {
   public static createStaff = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
+        this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
       const { error } = validateStaffData(req.body);
       if (error) {
-        this.logger.error(400, 'Bad Request!', error);
+        this.logger.error('Bad Request!', error);
         return errResponse(400, 'Bad Request!', error);
       }
       const staff = new Staff({
@@ -53,10 +53,10 @@ class staffModule {
   public static readStaff = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
+        this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const staffId = req.params.staffId;
+      const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (!staff) {
         this.logger.error('Staff Member Not Found!');
@@ -88,10 +88,10 @@ class staffModule {
   public static updateStaff = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad request');
+        this.logger.error('Bad request');
         return errResponse(404, 'Bad Request');
       }
-      const staffId = req.params.staffId;
+      const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (staff) {
         staff.set(req.body);
@@ -110,10 +110,10 @@ class staffModule {
   public static deleteStaff = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad Request!');
+        this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const staffId = req.params.staffId;
+      const staffId = req.params.id;
       const staff = await Staff.findByIdAndDelete(staffId);
       if (!staff) {
         this.logger.error('Staff member not found!');

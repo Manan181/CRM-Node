@@ -35,12 +35,12 @@ const validateName = (nameField: string) => {
 };
 
 const imageUpload = async (file) => {
-  let uploadsDir = path.resolve(`${__dirname}/../../`, 'uploads');
-  uploadsDir = `${uploadsDir}/${uuidv4()}`;
-  fs.mkdirSync(uploadsDir);
+  const uploadsDir = path.resolve(__dirname, '..', 'uploads');
+  const tempDir = await fs.promises.mkdtemp(`${uploadsDir}/`);
   const ext = path.extname(file.name);
-  const filename = `${uploadsDir}/${uuidv4()}${ext}`;
+  const filename = path.join(tempDir, `${uuidv4()}${ext}`);
   await file.mv(filename);
+  return `${path.basename(tempDir)}/${path.basename(filename)}`;
 };
 
 export { sucResponse, errResponse, validateEmail, validateName, imageUpload };

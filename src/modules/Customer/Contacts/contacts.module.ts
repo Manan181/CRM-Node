@@ -2,10 +2,8 @@ import Contact from './contacts.model';
 import { Request } from 'express';
 import Log from '../../../helpers/logger';
 import { sucResponse, errResponse } from '../../../helpers/utils';
+import config from '../../../config/config';
 // import bcrypt from 'bcryptjs';
-import { validateContactsData } from '../../../helpers/validations';
-// import imageUpload from '../../../helpers/imageUpload';
-// import config from '../../config/config';
 
 class contactsModule {
   private static logger: any = Log.getLogger();
@@ -13,22 +11,9 @@ class contactsModule {
   // create a new contact
   public static createContact = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const { error } = validateContactsData(req.body);
-      if (error) {
-        this.logger.error(400, 'Bad Request!', error);
-        return errResponse(400, 'Bad Request!', error);
-      }
-
-      // const uploadError = imageUpload(req);
-      // if (uploadError) return uploadError;
-
       const contact = new Contact({
         customerId: req.body.customerId,
-        // profileImageUrl: `${config.adminUrl}/${config.contactProfileImagePath}/`,
+        profileImageUrl: `${config.adminUrl}/${req.body.fileName}`,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -39,7 +24,8 @@ class contactsModule {
         sendWelcomeEmail: req.body.sendWelcomeEmail,
         sendSetPasswordEmail: req.body.sendSetPasswordEmail,
         permissions: req.body.permissions,
-        emailNotifications: req.body.emailNotifications
+        emailNotifications: req.body.emailNotifications,
+        password: req.body.password
       });
       const savedContact = await contact.save();
       return sucResponse(200, 'Contact Saved!', savedContact);
@@ -50,7 +36,7 @@ class contactsModule {
   };
 
   // get all contacts
-  public static getAllContacts = async () => {
+  public static readAllContacts = async () => {
     try {
       const contacts = await Contact.find();
       if (contacts.length > 0) {
@@ -67,15 +53,6 @@ class contactsModule {
   // Set Contact password from reset password link
   public static setContactPassword = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const { error } = validateContactsData(req.body);
-      if (error) {
-        this.logger.error(400, 'Bad Request!', error);
-        return errResponse(400, 'Bad Request!', error);
-      }
       const contact = await Contact.findById(req.body.email);
       if (contact) {
         contact.password = req.body.password;
@@ -91,11 +68,7 @@ class contactsModule {
   // read a contact
   public static readContact = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const contactId = req.params.contactId;
+      const contactId = req.params.id;
       const contact = await Contact.findById(contactId);
       if (!contact) {
         this.logger.error('Contact not found!');
@@ -110,33 +83,26 @@ class contactsModule {
     }
   };
 
-  // read all contacts
-  public static readAllContacts = async () => {
-    try {
-      const contacts = await Contact.find();
-      if (contacts.length > 0) {
-        return sucResponse(200, `Found ${contacts.length} customers`, contacts);
-      } else {
-        return errResponse(404, 'No Contacts Found!');
-      }
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
-    }
-  };
-
   // update a contact
   public static updateContact = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const contactId = req.params.contactId;
-      const contact = await Contact.findById(contactId);
+      const update = {
+        profileImageUrl: req.body.profileImageUrl,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phone: req.body.phone,
+        position: req.body.position,
+        direction: req.body.direction,
+        isPrimaryContact: req.body.isPrimaryContact,
+        sendSetPasswordEmail: req.body.sendSetPasswordEmail,
+        permissions: req.body.permissions,
+        emailNotifications: req.body.emailNotifications,
+        password: req.body.password
+      };
+      const contact = await Contact.updateOne({ _id: req.params.id }, { $set: update }, { upsert: true });
       if (contact) {
-        contact.set(req.body);
-        await contact.save();
+        this.logger.info('Contact Updated Successfully!');
         return sucResponse(201, 'Updated Contact!', contact);
       } else {
         this.logger.error('Contact Not Found!');
@@ -151,11 +117,7 @@ class contactsModule {
   // delete a contact
   public static deleteContact = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const contactId = req.params.contactId;
+      const contactId = req.params.id;
       const customer = await Contact.findByIdAndDelete(contactId);
       if (!customer) {
         this.logger.error('Contact not found!');

@@ -11,13 +11,13 @@ class customerModule {
   public static createCustomer = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
+        this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
 
       const { error } = validateCustomerData(req.body);
       if (error) {
-        this.logger.error(400, 'Bad Request!', error);
+        this.logger.error(error);
         return errResponse(400, 'Bad Request!', error);
       }
 
@@ -45,10 +45,10 @@ class customerModule {
   public static readCustomer = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad request!');
+        this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const customerId = req.params.customerId;
+      const customerId = req.params.id;
       const customer = await Customer.findById(customerId);
       if (!customer) {
         this.logger.error('Customer not found!');
@@ -76,10 +76,10 @@ class customerModule {
   public static updateCustomer = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad request!');
+        this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const customerId = req.params.customerId;
+      const customerId = req.params.id;
       const customer = await Customer.findById(customerId);
       if (customer) {
         customer.set(req.body);
@@ -98,10 +98,10 @@ class customerModule {
   public static deleteCustomer = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad request!');
+        this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const customerId = req.params.customerId;
+      const customerId = req.params.id;
       const customer = await Customer.findByIdAndDelete(customerId);
       if (!customer) {
         this.logger.error('Customer not found!');

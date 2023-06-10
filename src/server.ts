@@ -8,6 +8,7 @@ import config from './config/config';
 import Routes from './routes';
 import { errResponse } from './helpers/utils';
 import fileUpload from 'express-fileupload';
+import path from 'path';
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ class App {
     });
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
-    this.app.use(express.static(`${__dirname}/../../uploads/`)); // Static File Path
+    this.app.use(express.static(path.resolve(__dirname, '..', 'dist/uploads'))); // Static File Path
     this.app.use(fileUpload({ parseNested: true }));
     const routes = new Routes(NODE_ENV);
     this.app.use('/api/', routes.path());

@@ -17,7 +17,7 @@ class staffMiddleware {
       // req.staff = staff;
       next();
     } catch (error) {
-      this.logger.error(401, error);
+      this.logger.error(error);
       res.status(401).send(error);
     }
   };

@@ -4,9 +4,9 @@ import StaffController from './staff.controller';
 const router = express.Router();
 
 router.post('/create', StaffController.createStaff);
-router.get('/staff/:staffId', StaffController.readStaff);
+router.get('/staff/:id', StaffController.readStaff);
 router.get('/', StaffController.readAllStaff);
-router.patch('/update/:staffId', StaffController.updateStaff);
-router.delete('/delete/:staffId', StaffController.deleteStaff);
+router.patch('/update/:id', StaffController.updateStaff);
+router.delete('/delete/:id', StaffController.deleteStaff);
 
 export default router;

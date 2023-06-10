@@ -1,31 +1,6 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const permissions: Schema = new Schema(
-  {
-    invoices: Boolean,
-    estimates: Boolean,
-    contracts: Boolean,
-    proposals: Boolean,
-    support: Boolean,
-    projects: Boolean
-  },
-  { timestamps: true }
-);
-
-const emailNotifications = new Schema(
-  {
-    invoice: Boolean,
-    estimate: Boolean,
-    contract: Boolean,
-    creditNote: Boolean,
-    tickets: Boolean,
-    project: Boolean,
-    task: Boolean
-  },
-  { timestamps: true }
-);
-
 const contactsSchema = new Schema(
   {
     customerId: {
@@ -48,8 +23,23 @@ const contactsSchema = new Schema(
     isPrimaryContact: Boolean,
     sendWelcomeEmail: Boolean,
     sendSetPasswordEmail: Boolean,
-    permissions: permissions,
-    emailNotifications: emailNotifications
+    permissions: {
+      invoices: Boolean,
+      estimates: Boolean,
+      contracts: Boolean,
+      proposals: Boolean,
+      support: Boolean,
+      projects: Boolean
+    },
+    emailNotifications: {
+      invoice: Boolean,
+      estimate: Boolean,
+      contract: Boolean,
+      creditNote: Boolean,
+      tickets: Boolean,
+      project: Boolean,
+      task: Boolean
+    }
   },
   { timestamps: true }
 );
