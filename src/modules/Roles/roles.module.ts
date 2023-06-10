@@ -1,9 +1,9 @@
-import Roles from '../../models/Roles/roles.model';
+import Roles from './roles.model';
 import { Request } from 'express';
-import { Log } from '../../helpers/logger';
+import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
 
-export class rolesModule {
+class rolesModule {
   private static logger: any = Log.getLogger();
 
   public static createRole = async (req: Request) => {

@@ -1,2 +1,2 @@
-import { App } from './server';
+import App from './server';
 new App();

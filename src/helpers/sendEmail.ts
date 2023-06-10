@@ -1,11 +1,12 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
-import { Log } from './logger';
-import { config } from '../config/config';
+import Log from './logger';
+import config from '../config/config';
 import * as fs from 'fs';
 import { keys } from 'lodash';
 import { Json } from '../types/json';
-export class SendEmail {
+
+class SendEmail {
   public static sendEmail = async (template: string = null, replaceData: Json = null, emails: string[], subject: string, text: string = null, isPersonalEmail: boolean = false) => {
     try {
       let html = '';
@@ -62,3 +63,5 @@ export class SendEmail {
     return html;
   };
 }
+
+export default SendEmail;

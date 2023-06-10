@@ -1,18 +1,26 @@
-import Customer from '../../models/Customer/customer.model';
+import Customer from './customer.model';
 import { Request } from 'express';
 import mongoose from 'mongoose';
-import { Log } from '../../helpers/logger';
+import Log from '../../helpers/logger';
+import { validateCustomerData } from '../../helpers/validations';
 import { sucResponse, errResponse } from '../../helpers/utils';
 
-export class customerModule {
+class customerModule {
   private static logger: any = Log.getLogger();
 
   public static createCustomer = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
+        this.logger.error(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!');
       }
+
+      const { error } = validateCustomerData(req.body);
+      if (error) {
+        this.logger.error(400, 'Bad Request!', error);
+        return errResponse(400, 'Bad Request!', error);
+      }
+
       const customer = new Customer({
         _id: new mongoose.Types.ObjectId(),
         company: req.body.company,
@@ -37,13 +45,13 @@ export class customerModule {
   public static readCustomer = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
+        this.logger.error(404, 'Bad request!');
+        return errResponse(404, 'Bad Request!');
       }
       const customerId = req.params.customerId;
       const customer = await Customer.findById(customerId);
       if (!customer) {
-        this.logger.error('Customer not found');
+        this.logger.error('Customer not found!');
         return errResponse(404, 'Customer Not Found!', customer);
       } else {
         this.logger.info('Customer Found!', customer);
@@ -68,17 +76,17 @@ export class customerModule {
   public static updateCustomer = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
+        this.logger.error(404, 'Bad request!');
+        return errResponse(404, 'Bad Request!');
       }
       const customerId = req.params.customerId;
       const customer = await Customer.findById(customerId);
       if (customer) {
         customer.set(req.body);
         await customer.save();
-        return sucResponse(201, 'Updated Customer', customer);
+        return sucResponse(201, 'Updated Customer!', customer);
       } else {
-        this.logger.error('Customer Not Found');
+        this.logger.error('Customer Not Found!');
         return errResponse(404, 'Customer Not Found!');
       }
     } catch (error) {
