@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import { config } from '../config/config';
+import config from '../config/config';
 
-export class Jwt {
+class Jwt {
   /*
    * getAuthToken
    */
@@ -23,3 +23,5 @@ export class Jwt {
     return false;
   }
 }
+
+export default Jwt;

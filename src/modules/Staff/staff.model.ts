@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import Permissions from '../permissions.model';
+import bcrypt from 'bcryptjs';
 
 const permissionsSchema = {
   permissions: Permissions
@@ -8,21 +9,14 @@ const permissionsSchema = {
 const staffSchema: Schema = new Schema(
   {
     profileImage: String,
-    firstName: {
-      type: String,
-      required: true
-    },
-    lastName: {
-      type: String,
-      required: true
-    },
+    firstName: String,
+    lastName: String,
     email: {
       type: String,
-      required: true,
       unique: true
     },
     hourlyRate: Number,
-    phone: Number,
+    phone: String,
     facebookUrl: String,
     linkedinUrl: String,
     skypeUrl: String,
@@ -31,19 +25,22 @@ const staffSchema: Schema = new Schema(
     direction: String,
     isAdmintrator: Boolean,
     sendWelcomeEmail: Boolean,
-    password: {
-      type: String,
-      required: true
-    },
+    password: String,
     role: {
       type: Schema.Types.ObjectId,
-      ref: 'Role',
-      required: false
+      ref: 'Role'
     }
   },
   { timestamps: true }
 );
 
 staffSchema.add(permissionsSchema);
+
+staffSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
 
 export default mongoose.model('Staff', staffSchema);

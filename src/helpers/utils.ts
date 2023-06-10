@@ -1,3 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
+import * as fs from 'fs';
+
 let res = (status: string, statusCode: number, message: string, data: object) => {
   return { status, statusCode, message, data };
 };
@@ -30,4 +34,13 @@ const validateName = (nameField: string) => {
   return true;
 };
 
-export { sucResponse, errResponse, validateEmail, validateName };
+const imageUpload = async (file) => {
+  let uploadsDir = path.resolve(`${__dirname}/../../`, 'uploads');
+  uploadsDir = `${uploadsDir}/${uuidv4()}`;
+  fs.mkdirSync(uploadsDir);
+  const ext = path.extname(file.name);
+  const filename = `${uploadsDir}/${uuidv4()}${ext}`;
+  await file.mv(filename);
+};
+
+export { sucResponse, errResponse, validateEmail, validateName, imageUpload };

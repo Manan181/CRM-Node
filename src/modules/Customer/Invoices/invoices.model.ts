@@ -1,5 +1,21 @@
 import { Schema, model } from 'mongoose';
-import Address from './address.model';
+
+const AddressSchema: Schema = new Schema({
+  street: String,
+  city: String,
+  state: {
+    type: String,
+    maxlength: 100
+  },
+  zipCode: {
+    type: String,
+    maxlength: 100
+  },
+  country: {
+    type: String,
+    maxlength: 100
+  }
+});
 
 const invoiceSchema: Schema = new Schema(
   {
@@ -8,8 +24,8 @@ const invoiceSchema: Schema = new Schema(
       required: [true, 'Customer Id is required'],
       ref: 'Customer'
     },
-    billTo: Address,
-    shipTo: Address,
+    billTo: AddressSchema,
+    shipTo: AddressSchema,
     invoiceNumber: {
       type: String,
       required: [true, 'Invoice Number is required']

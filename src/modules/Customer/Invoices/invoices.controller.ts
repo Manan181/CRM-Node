@@ -1,13 +1,13 @@
-import rolesModule from '../../modules/Roles/roles.module';
-import { Log } from '../../helpers/logger';
-import { errResponse } from '../../helpers/utils';
+import invoiceModule from './invoices.module';
+import Log from '../../../helpers/logger';
+import { errResponse } from '../../../helpers/utils';
 
-export class RolesController {
+class ContactsController {
   private static logger: any = Log.getLogger();
 
-  public static createRole = async (req, res) => {
+  public static createInvoice = async (req, res) => {
     try {
-      const result = await rolesModule.createRole(req);
+      const result = await invoiceModule.createInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -15,9 +15,9 @@ export class RolesController {
     }
   };
 
-  public static readRole = async (req, res) => {
+  public static readInvoice = async (req, res) => {
     try {
-      const result = await rolesModule.readRole(req);
+      const result = await invoiceModule.readInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -25,9 +25,9 @@ export class RolesController {
     }
   };
 
-  public static readAllRoles = async (req, res) => {
+  public static readAllInvoices = async (req, res) => {
     try {
-      const result = await rolesModule.readAllRoles();
+      const result = await invoiceModule.readAllInvoices();
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -35,9 +35,9 @@ export class RolesController {
     }
   };
 
-  public static updateRole = async (req, res) => {
+  public static updateInvoice = async (req, res) => {
     try {
-      const result = await rolesModule.updateRole(req);
+      const result = await invoiceModule.updateInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -45,9 +45,9 @@ export class RolesController {
     }
   };
 
-  public static deleteRole = async (req, res) => {
+  public static deleteInvoice = async (req, res) => {
     try {
-      const result = await rolesModule.deleteRole(req);
+      const result = await invoiceModule.deleteInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -55,3 +55,5 @@ export class RolesController {
     }
   };
 }
+
+export default ContactsController;

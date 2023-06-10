@@ -1,19 +1,26 @@
-import Staff from '../../models/Staff/staff.model';
+import Staff from './staff.model';
 import { Request } from 'express';
-import { Log } from '../../helpers/logger';
+import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
+import bcrypt from 'bcryptjs';
+import { validateStaffData } from '../../helpers/validations';
 
-export class staffModule {
+class staffModule {
   private static logger: any = Log.getLogger();
 
   public static createStaff = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
+        this.logger.error(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const { error } = validateStaffData(req.body);
+      if (error) {
+        this.logger.error(400, 'Bad Request!', error);
+        return errResponse(400, 'Bad Request!', error);
       }
       const staff = new Staff({
-        firstName: req.body.firstName,
+        firstName: req.body.firstName ?? '',
         lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
@@ -29,13 +36,14 @@ export class staffModule {
         sendWelcomeEmail: req.body.sendWelcomeEmail,
         notStaffMember: req.body.notStaffMember,
         profileImageUrl: req.body.profileImageUrl,
+        role: req.body.role,
         permissions: {
           role: req.body.permissions.role,
           permissions: req.body.permissions.permissions
         }
       });
       const savedStaff = await staff.save();
-      return sucResponse(200, 'Staff Saved', savedStaff);
+      return sucResponse(200, 'Staff Saved!', savedStaff);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something Went Wrong!!', error);
@@ -45,13 +53,13 @@ export class staffModule {
   public static readStaff = async (req: Request) => {
     try {
       if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
+        this.logger.error(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!');
       }
       const staffId = req.params.staffId;
       const staff = await Staff.findById(staffId);
       if (!staff) {
-        this.logger.error('Staff member not found');
+        this.logger.error('Staff Member Not Found!');
         return errResponse(404, 'Staff Member Not Found!', staff);
       } else {
         this.logger.info('Staff Member Found!', staff);
@@ -66,7 +74,11 @@ export class staffModule {
   public static readAllStaff = async () => {
     try {
       const staffs = await Staff.find();
-      return sucResponse(200, `Found ${staffs.length} staff members`, staffs);
+      if (staffs.length > 0) {
+        return sucResponse(200, `${staffs.length} Staffs Found!`, staffs);
+      } else {
+        return errResponse(404, 'No Staff Members Found!');
+      }
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something Went Wrong!!', error);
@@ -112,6 +124,37 @@ export class staffModule {
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something Went Wrong!!', error);
+    }
+  };
+
+  public static loginAdmin = async (req) => {
+    try {
+      const { email, password } = req.body;
+      const staffDetail = await Staff.findOne({ email: email });
+      // validate email & password
+      if (!email && !password) {
+        return errResponse(400, 'Please fill all the required fields!');
+      }
+      // check is user is exist or not
+      if (!staffDetail) {
+        this.logger.error('Staff does not exist!');
+        return errResponse(400, 'Staff does not exist!');
+      }
+      try {
+        // const isMatch = await bcrypt.compare(password, staffDetail.password);
+        if (await bcrypt.compare(password, staffDetail.password)) {
+          return sucResponse(200, 'Staff Login Successful!', staffDetail);
+        } else {
+          this.logger.error('Password Incorrect!');
+          return errResponse(200, 'Password Incorrect!');
+        }
+      } catch (error) {
+        this.logger.error(error);
+        return errResponse(500, `Something Went Wrong: ${error.message}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+      return errResponse(500, `Something Went Wrong: ${error.message}`);
     }
   };
 }

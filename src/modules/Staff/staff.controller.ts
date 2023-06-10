@@ -1,8 +1,8 @@
-import staffModule from '../../modules/Staff/staff.module';
-import { Log } from '../../helpers/logger';
+import staffModule from './staff.module';
+import Log from '../../helpers/logger';
 import { errResponse } from '../../helpers/utils';
 
-export class StaffController {
+class StaffController {
   private static logger: any = Log.getLogger();
 
   public static createStaff = async (req, res) => {
@@ -55,3 +55,5 @@ export class StaffController {
     }
   };
 }
+
+export default StaffController;
