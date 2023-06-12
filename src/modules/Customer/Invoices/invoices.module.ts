@@ -75,10 +75,6 @@ class invoicesModule {
   // update a invoice
   public static updateInvoice = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const invoiceId = req.params.id;
       const invoice = await Invoice.findById(invoiceId);
       if (invoice) {

@@ -9,11 +9,6 @@ class customerModule {
 
   public static createCustomer = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-
       const customer = new Customer({
         _id: new mongoose.Types.ObjectId(),
         company: req.body.company,
@@ -37,10 +32,6 @@ class customerModule {
 
   public static readCustomer = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const customerId = req.params.id;
       const customer = await Customer.findById(customerId);
       if (!customer) {
@@ -59,7 +50,12 @@ class customerModule {
   public static readAllCustomer = async () => {
     try {
       const customers = await Customer.find();
-      return sucResponse(200, `Found ${customers.length} customers`, customers);
+      if (customers.length > 0) {
+        return sucResponse(200, `Found ${customers.length} customers`, customers);
+      } else {
+        this.logger.error('No Customers Found!');
+        return errResponse(404, 'No Customers Found!');
+      }
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something Went Wrong!!', error);
@@ -68,10 +64,6 @@ class customerModule {
 
   public static updateCustomer = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const customerId = req.params.id;
       const customer = await Customer.findById(customerId);
       if (customer) {
@@ -90,10 +82,6 @@ class customerModule {
 
   public static deleteCustomer = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const customerId = req.params.id;
       const customer = await Customer.findByIdAndDelete(customerId);
       if (!customer) {

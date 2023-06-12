@@ -37,6 +37,10 @@ class ContactsController {
 
   public static updateInvoice = async (req, res) => {
     try {
+      if (!req.params || !req.body) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await invoiceModule.updateInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {

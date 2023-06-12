@@ -1,17 +1,17 @@
-import customerModule from './customer.module';
+import itemsModule from './items.module';
 import Log from '../../helpers/logger';
 import { errResponse } from '../../helpers/utils';
 
 class CustomerController {
   private static logger: any = Log.getLogger();
 
-  public static createCustomer = async (req, res) => {
+  public static createItem = async (req, res) => {
     try {
       if (!req.body) {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await customerModule.createCustomer(req);
+      const result = await itemsModule.createItem(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -19,13 +19,23 @@ class CustomerController {
     }
   };
 
-  public static readCustomer = async (req, res) => {
+  public static readAllItems = async (req, res) => {
     try {
-      if (!req.body) {
+      const result = await itemsModule.readAllItems();
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static updateItem = async (req, res) => {
+    try {
+      if (!req.params || !req.body) {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await customerModule.readCustomer(req);
+      const result = await itemsModule.updateItem(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -33,37 +43,13 @@ class CustomerController {
     }
   };
 
-  public static readAllCustomer = async (req, res) => {
-    try {
-      const result = await customerModule.readAllCustomer();
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static updateCustomer = async (req, res) => {
+  public static deleteItem = async (req, res) => {
     try {
       if (!req.params) {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await customerModule.updateCustomer(req);
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static deleteCustomer = async (req, res) => {
-    try {
-      if (!req.params) {
-        this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const result = await customerModule.deleteCustomer(req);
+      const result = await itemsModule.deleteItem(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
