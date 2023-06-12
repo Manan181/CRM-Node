@@ -9,6 +9,7 @@ import Routes from './routes';
 import { errResponse } from './helpers/utils';
 import fileUpload from 'express-fileupload';
 import path from 'path';
+import timeout from 'connect-timeout';
 
 dotenv.config();
 
@@ -34,8 +35,9 @@ class App {
         next();
       }
     });
+    this.app.use(timeout('5s'));
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+    this.app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
     this.app.use(express.static(path.resolve(__dirname, '..', 'dist/uploads'))); // Static File Path
     this.app.use(fileUpload({ parseNested: true }));
     const routes = new Routes(NODE_ENV);

@@ -3,22 +3,12 @@ import { Request } from 'express';
 import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
 import bcrypt from 'bcryptjs';
-import { validateStaffData } from '../../helpers/validations';
 
 class staffModule {
   private static logger: any = Log.getLogger();
 
   public static createStaff = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const { error } = validateStaffData(req.body);
-      if (error) {
-        this.logger.error('Bad Request!', error);
-        return errResponse(400, 'Bad Request!', error);
-      }
       const staff = new Staff({
         firstName: req.body.firstName ?? '',
         lastName: req.body.lastName,
@@ -52,10 +42,6 @@ class staffModule {
 
   public static readStaff = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (!staff) {
@@ -87,10 +73,6 @@ class staffModule {
 
   public static updateStaff = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
       const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (staff) {

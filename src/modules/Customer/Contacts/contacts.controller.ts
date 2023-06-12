@@ -1,6 +1,5 @@
 import contactsModule from './contacts.module';
 import Log from '../../../helpers/logger';
-import { validateContactsData, validateUpdateContactData } from '../../../helpers/validations';
 import { errResponse, imageUpload } from '../../../helpers/utils';
 
 class ContactsController {
@@ -11,16 +10,6 @@ class ContactsController {
       if (!req.body) {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
-      }
-      if (typeof req.body.permissions === 'string') req.body.permissions = JSON.parse(req.body.permissions);
-      if (typeof req.body.emailNotifications === 'string') req.body.emailNotifications = JSON.parse(req.body.emailNotifications);
-
-      const { error, value } = validateContactsData(req.body);
-      if (error) {
-        this.logger.error(error);
-        return errResponse(400, 'Bad Request!', error);
-      } else {
-        req.body = value;
       }
       if (req.files.image) {
         const fileName = await imageUpload(req.files.image);
@@ -64,11 +53,6 @@ class ContactsController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const { error } = validateContactsData(req.body);
-      if (error) {
-        this.logger.error(error);
-        return errResponse(400, 'Bad Request!', error);
-      }
       const result = await contactsModule.setContactPassword(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -85,14 +69,6 @@ class ContactsController {
       }
       if (typeof req.body.permissions === 'string') req.body.permissions = JSON.parse(req.body.permissions);
       if (typeof req.body.emailNotifications === 'string') req.body.emailNotifications = JSON.parse(req.body.emailNotifications);
-
-      const { error, value } = validateUpdateContactData(req.body);
-      if (error) {
-        this.logger.error(error);
-        return errResponse(400, 'Bad Request!', error);
-      } else {
-        req.body = value;
-      }
       const result = await contactsModule.updateContact(req);
       return res.status(200).send(result).end();
     } catch (error) {

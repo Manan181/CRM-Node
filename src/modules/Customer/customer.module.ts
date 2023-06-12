@@ -2,7 +2,6 @@ import Customer from './customer.model';
 import { Request } from 'express';
 import mongoose from 'mongoose';
 import Log from '../../helpers/logger';
-import { validateCustomerData } from '../../helpers/validations';
 import { sucResponse, errResponse } from '../../helpers/utils';
 
 class customerModule {
@@ -13,12 +12,6 @@ class customerModule {
       if (!req.body) {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
-      }
-
-      const { error } = validateCustomerData(req.body);
-      if (error) {
-        this.logger.error(error);
-        return errResponse(400, 'Bad Request!', error);
       }
 
       const customer = new Customer({

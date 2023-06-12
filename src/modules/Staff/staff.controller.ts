@@ -7,6 +7,10 @@ class StaffController {
 
   public static createStaff = async (req, res) => {
     try {
+      if (!req.body) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await staffModule.createStaff(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -17,6 +21,10 @@ class StaffController {
 
   public static readStaff = async (req, res) => {
     try {
+      if (!req.params) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await staffModule.readStaff(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -37,6 +45,10 @@ class StaffController {
 
   public static updateStaff = async (req, res) => {
     try {
+      if (!req.params) {
+        this.logger.error('Bad request');
+        return errResponse(404, 'Bad Request');
+      }
       const result = await staffModule.updateStaff(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -48,6 +60,20 @@ class StaffController {
   public static deleteStaff = async (req, res) => {
     try {
       const result = await staffModule.deleteStaff(req);
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static loginAdmin = async (req, res) => {
+    try {
+      if (!req.body) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const result = await staffModule.loginAdmin(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
