@@ -1,19 +1,22 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet'; // Security
-import { DB } from './database';
-import { Log } from './helpers/logger';
-import { SendEmail } from './helpers/sendEmail';
-import { config } from './config/config';
-import CustomerRoutes from './routes/Customer/customer.route';
+import DB from './database';
+import Log from './helpers/logger';
+import SendEmail from './helpers/sendEmail';
+import config from './config/config';
+import Routes from './routes';
 import { errResponse } from './helpers/utils';
+import fileUpload from 'express-fileupload';
+import path from 'path';
+import timeout from 'connect-timeout';
 
 dotenv.config();
 
 // initialize database
 DB.init();
 
-export class App {
+class App {
   protected app: Express = express();
   private logger = Log.getLogger();
   constructor() {
@@ -32,11 +35,13 @@ export class App {
         next();
       }
     });
+    this.app.use(timeout('5s'));
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.static('public'));
-    this.app.get('/ping', (req: Request, res: Response) => res.json({ message: 'pong' }));
-    this.app.use('/api/', CustomerRoutes);
+    this.app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+    this.app.use(express.static(path.resolve(__dirname, '..', 'dist/uploads'))); // Static File Path
+    this.app.use(fileUpload({ parseNested: true }));
+    const routes = new Routes(NODE_ENV);
+    this.app.use('/api/', routes.path());
     this.app.listen(PORT, () => {
       this.logger.info(`The server is running in port localhost: ${config.port}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
@@ -50,3 +55,5 @@ export class App {
     });
   }
 }
+
+export default App;

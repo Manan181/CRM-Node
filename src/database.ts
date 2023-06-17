@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { config } from './config/config';
+import config from './config/config';
 
-export class DB {
+class DB {
   public static async init() {
     try {
       await mongoose.connect(config.dbUrl, {
@@ -14,3 +14,5 @@ export class DB {
     }
   }
 }
+
+export default DB;

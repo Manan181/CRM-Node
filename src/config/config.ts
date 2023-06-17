@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const config = {
+const config = {
   nodeEnv: process.env.NODE_ENV,
   serviceId: process.env.TWILIO_SERVICE_ID,
   accountSid: process.env.TWILIO_ACCOUNT_SID,
@@ -23,5 +23,8 @@ export const config = {
   smtpPort: process.env.SMTP_PORT,
   smtpUserName: process.env.SMTP_USER_NAME,
   smtpPassword: process.env.SMTP_PASSWORD,
-  exceptionMail: process.env.EXCEPTION_MAIL
+  exceptionMail: process.env.EXCEPTION_MAIL,
+  adminUrl: process.env.ADMIN_URL
 };
+
+export default config;

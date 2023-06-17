@@ -1,9 +1,9 @@
 import moment from 'moment-timezone';
 import { createLogger, format, transports } from 'winston';
 const { combine, timestamp, prettyPrint, colorize } = format;
-import { config } from '../config/config';
+import config from '../config/config';
 
-export class Log {
+class Log {
   public static getLogger() {
     return createLogger({
       format: combine(timestamp({ format: this.timestampFormat }), prettyPrint(), colorize()),
@@ -13,3 +13,5 @@ export class Log {
   }
   private static timestampFormat: any = moment(new Date()).tz(config.timezone).format(config.dataBaseDateTimeFormat);
 }
+
+export default Log;
