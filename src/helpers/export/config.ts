@@ -1,9 +1,20 @@
-export interface ExportXlsxOptions {
+export interface XlsxOptions {
   sheetName: string;
   header: Record<string, any>;
   content: Record<string, any>;
   common: Record<string, any>;
-  headerLabels: [string];
+}
+export interface PdfOptions {
+  header: Record<string, any>;
+  content: Record<string, any>;
+  footer: Record<string, any>;
+  common: Record<string, any>;
+}
+
+export interface ExportOptionsType {
+  xlsx: XlsxOptions;
+  pdf: PdfOptions;
+  headerLabels: string[];
 }
 
 export const exportTo = {
@@ -12,37 +23,62 @@ export const exportTo = {
   xlsx: 'xlsx'
 };
 
-const defaultConfig = {
-  header: {
-    font: {
-      name: 'Arial',
-      family: 2,
-      size: 10,
-      bold: true
+export const defaultExportConfig: ExportOptionsType = {
+  headerLabels: [],
+  xlsx: {
+    sheetName: 'Sheet',
+    header: {
+      font: {
+        name: 'Arial',
+        family: 2,
+        size: 10,
+        bold: true
+      }
+    },
+    content: {
+      font: {
+        name: 'Arial',
+        family: 2,
+        size: 8,
+        bold: false
+      }
+    },
+    common: {
+      alignment: {
+        vertical: 'middle',
+        horizontal: 'center'
+      },
+      minWidth: 20
     }
   },
-  content: {
-    font: {
-      name: 'Arial',
-      family: 2,
-      size: 8,
-      bold: false
-    }
-  },
-  common: {
-    alignment: {
-      vertical: 'middle',
-      horizontal: 'center'
+  pdf: {
+    header: {},
+    content: {
+      fontSize: 12
+    },
+    footer: {
+      fontSize: 8
+    },
+    common: {
+      theme: 'striped'
     }
   }
 };
 
-export const ExportOptions = {
+export const ExportOptions: Record<string, ExportOptionsType> = {
   notes: {
     headerLabels: ['Description', 'Added From', 'Date Added'],
-    sheetName: 'Notes',
-    header: defaultConfig.header,
-    content: defaultConfig.content,
-    common: defaultConfig.common
+    xlsx: {
+      sheetName: 'Notes',
+      header: defaultExportConfig.xlsx.header,
+      content: defaultExportConfig.xlsx.content,
+      common: defaultExportConfig.xlsx.common
+    },
+    pdf: {
+      common: defaultExportConfig.pdf.common,
+      content: defaultExportConfig.pdf.content,
+      footer: defaultExportConfig.pdf.footer,
+      header: defaultExportConfig.pdf.header
+    }
   }
 };
