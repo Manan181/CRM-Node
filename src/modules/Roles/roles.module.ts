@@ -8,10 +8,6 @@ class rolesModule {
 
   public static createRole = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
       const role = new Roles({
         roleName: req.body.roleName,
         permissions: req.body.permissions
@@ -26,10 +22,6 @@ class rolesModule {
 
   public static readRole = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
       const roleId = req.params.id;
       const role = await Roles.findById(roleId);
       if (!role) {
@@ -57,10 +49,6 @@ class rolesModule {
 
   public static updateRole = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
       const roleId = req.params.id;
       const role = await Roles.findById(roleId);
       if (role) {
@@ -79,10 +67,6 @@ class rolesModule {
 
   public static deleteRole = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
       const roleId = req.params.id;
       const role = await Roles.findByIdAndDelete(roleId);
       if (!role) {

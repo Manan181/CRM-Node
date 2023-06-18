@@ -11,7 +11,7 @@ class StaffController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await staffModule.createStaff(req);
+      const result = await staffModule.createStaff(req, res);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -59,6 +59,10 @@ class StaffController {
 
   public static deleteStaff = async (req, res) => {
     try {
+      if (!req.params) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await staffModule.deleteStaff(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -73,7 +77,7 @@ class StaffController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await staffModule.loginAdmin(req);
+      const result = await staffModule.loginStaff(req, res);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);

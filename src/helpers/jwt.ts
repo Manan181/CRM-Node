@@ -5,8 +5,8 @@ class Jwt {
   /*
    * getAuthToken
    */
-  public static getAuthToken(data: { userId: number }) {
-    return jwt.sign(data, config.jwtSecret);
+  public static getAuthToken(data: { userId }) {
+    return jwt.sign(data, config.accessTokenSecret);
   }
 
   /*
@@ -15,7 +15,7 @@ class Jwt {
   public static decodeAuthToken(token: string) {
     if (token) {
       try {
-        return jwt.verify(token, config.jwtSecret);
+        return jwt.verify(token, config.accessTokenSecret);
       } catch (error) {
         return false;
       }

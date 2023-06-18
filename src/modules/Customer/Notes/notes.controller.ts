@@ -1,17 +1,17 @@
-import invoiceModule from './invoices.module';
+import notesModule from './notes.module';
 import Log from '../../../helpers/logger';
 import { errResponse } from '../../../helpers/utils';
 
-class ContactsController {
+class CustomerController {
   private static logger: any = Log.getLogger();
 
-  public static createInvoice = async (req, res) => {
+  public static createNote = async (req, res) => {
     try {
       if (!req.body) {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await invoiceModule.createInvoice(req);
+      const result = await notesModule.createNote(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -19,13 +19,13 @@ class ContactsController {
     }
   };
 
-  public static readInvoice = async (req, res) => {
+  public static readNote = async (req, res) => {
     try {
       if (!req.body) {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await invoiceModule.readInvoice(req);
+      const result = await notesModule.readNote(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -33,9 +33,9 @@ class ContactsController {
     }
   };
 
-  public static readAllInvoices = async (req, res) => {
+  public static readAllNotes = async (req, res) => {
     try {
-      const result = await invoiceModule.readAllInvoices();
+      const result = await notesModule.readAllNotes();
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -43,13 +43,13 @@ class ContactsController {
     }
   };
 
-  public static updateInvoice = async (req, res) => {
+  public static updateNote = async (req, res) => {
     try {
       if (!req.params || !req.body) {
-        this.logger.error('Bad Request!');
+        this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await invoiceModule.updateInvoice(req);
+      const result = await notesModule.updateNote(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -57,9 +57,13 @@ class ContactsController {
     }
   };
 
-  public static deleteInvoice = async (req, res) => {
+  public static deleteNote = async (req, res) => {
     try {
-      const result = await invoiceModule.deleteInvoice(req);
+      if (!req.params) {
+        this.logger.error('Bad request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const result = await notesModule.deleteNote(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -68,4 +72,4 @@ class ContactsController {
   };
 }
 
-export default ContactsController;
+export default CustomerController;

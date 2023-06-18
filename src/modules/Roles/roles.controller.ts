@@ -7,6 +7,10 @@ class RolesController {
 
   public static createRole = async (req, res) => {
     try {
+      if (!req.body) {
+        this.logger.error('Bad request');
+        return errResponse(404, 'Bad Request');
+      }
       const result = await rolesModule.createRole(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -17,6 +21,10 @@ class RolesController {
 
   public static readRole = async (req, res) => {
     try {
+      if (!req.params) {
+        this.logger.error('Bad request');
+        return errResponse(404, 'Bad Request');
+      }
       const result = await rolesModule.readRole(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -37,6 +45,10 @@ class RolesController {
 
   public static updateRole = async (req, res) => {
     try {
+      if (!req.params || !req.body) {
+        this.logger.error('Bad request');
+        return errResponse(404, 'Bad Request');
+      }
       const result = await rolesModule.updateRole(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -47,6 +59,10 @@ class RolesController {
 
   public static deleteRole = async (req, res) => {
     try {
+      if (!req.params) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await rolesModule.deleteRole(req);
       return res.status(200).send(result).end();
     } catch (error) {

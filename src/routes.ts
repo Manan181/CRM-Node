@@ -6,6 +6,9 @@ import InvoiceRoute from './modules/Customer/Invoices/invoices.route';
 import RolesRoute from './modules/Roles/roles.route';
 import StaffRoute from './modules/Staff/staff.route';
 import ItemRoute from './modules/Items/items.route';
+import ItemsGroupRoute from './modules/Items/itemGroups/itemGroups.route';
+import NotesRoute from './modules/Customer/Notes/notes.route';
+import TasksRoute from './modules/Tasks/tasks.route';
 
 export default class Routes {
   protected basePath: string;
@@ -35,6 +38,9 @@ export default class Routes {
     router.use('/roles', RolesRoute);
     router.use('/staffs', StaffRoute);
     router.use('/items', ItemRoute);
+    router.use('/itemsGroup', ItemsGroupRoute);
+    router.use('/notes', NotesRoute);
+    router.use('/tasks', TasksRoute);
     router.all('/*', (req, res) => {
       return res.status(Constants.NOT_FOUND_CODE).json({
         error: 'URL Not Found'

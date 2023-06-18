@@ -8,8 +8,9 @@ import config from './config/config';
 import Routes from './routes';
 import { errResponse } from './helpers/utils';
 import fileUpload from 'express-fileupload';
-import path from 'path';
 import timeout from 'connect-timeout';
+import cookieParser from 'cookie-parser';
+import path from 'path';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ class App {
         next();
       }
     });
+    this.app.use(cookieParser());
     this.app.use(timeout('5s'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
