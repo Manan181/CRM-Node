@@ -1,6 +1,6 @@
 import { NextFunction } from 'express';
-import rolesModel from '../models/Roles/roles.model';
-import staffModel from '../models/Staff/staff.model';
+import rolesModel from '../modules/Roles/roles.model';
+import staffModel from '../modules/Staff/staff.model';
 
 export default class StaffRolesMiddleware {
   public static hasPermissions(permission: string) {

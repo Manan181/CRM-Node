@@ -7,10 +7,9 @@ const noteSchema: Schema = new Schema(
       required: [true, 'Customer Id is required'],
       ref: 'Customer'
     },
-    noteDescription: {
-      type: String,
-      required: false
-    }
+    noteDescription: String,
+    addedFrom: String,
+    dateAdded: String
   },
   { timestamps: true }
 );
