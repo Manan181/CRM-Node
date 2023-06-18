@@ -7,6 +7,10 @@ class ContactsController {
 
   public static createInvoice = async (req, res) => {
     try {
+      if (!req.body) {
+        this.logger.error('Bad Request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await invoiceModule.createInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {
@@ -17,6 +21,10 @@ class ContactsController {
 
   public static readInvoice = async (req, res) => {
     try {
+      if (!req.body) {
+        this.logger.error('Bad request!');
+        return errResponse(404, 'Bad Request!');
+      }
       const result = await invoiceModule.readInvoice(req);
       return res.status(200).send(result).end();
     } catch (error) {

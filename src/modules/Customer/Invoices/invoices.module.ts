@@ -10,10 +10,27 @@ class invoicesModule {
   // create a new invoice
   public static createInvoice = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
+      const invoice = new Invoice({
+        customerId: req.body.customerId,
+        billTo: req.body.billTo,
+        shipTo: req.body.shipTo,
+        invoiceNumber: req.body.invoiceNumber,
+        invoiceDate: req.body.invoiceDate,
+        dueDate: req.body.dueDate,
+        preventSendingOverdueReminders: req.body.preventSendingOverdueReminders,
+        tags: req.body.tags,
+        paymentModes: req.body.paymentModes,
+        currency: req.body.currency,
+        saleAgent: req.body.saleAgent,
+        recurringInvoice: req.body.recurringInvoice,
+        customRecurringDuration: req.body.customRecurringDuration,
+        discountType: req.body.discountType,
+        totalCycles: req.body.totalCycles,
+        adminNote: req.body.adminNote,
+        items: req.body.items
+      });
+      const savedInvoice = await invoice.save();
+      return sucResponse(200, 'Contact Saved!', savedInvoice);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something Went Wrong!!', error);
@@ -38,11 +55,7 @@ class invoicesModule {
   // read a contact
   public static readInvoice = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const invoiceId = req.params.invoiceId;
+      const invoiceId = req.params.id;
       const invoice = await Invoice.findById(invoiceId);
       if (!invoice) {
         this.logger.error('Invoice not found!');

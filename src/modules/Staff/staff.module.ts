@@ -1,14 +1,14 @@
 import Staff from './staff.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
-import bcrypt from 'bcryptjs';
 import { validateStaffData } from '../../helpers/validations';
+import Jwt from '../../helpers/jwt';
 
 class staffModule {
   private static logger: any = Log.getLogger();
 
-  public static createStaff = async (req: Request) => {
+  public static createStaff = async (req: Request, res: Response) => {
     try {
       if (!req.body) {
         this.logger.error(404, 'Bad Request!');
@@ -42,6 +42,8 @@ class staffModule {
           permissions: req.body.permissions.permissions
         }
       });
+      const token = Jwt.getAuthToken({ userId: staff._id });
+      res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
       const savedStaff = await staff.save();
       return sucResponse(200, 'Staff Saved!', savedStaff);
     } catch (error) {
@@ -109,11 +111,7 @@ class staffModule {
 
   public static deleteStaff = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const staffId = req.params.staffId;
+      const staffId = req.params.id;
       const staff = await Staff.findByIdAndDelete(staffId);
       if (!staff) {
         this.logger.error('Staff member not found!');
@@ -127,31 +125,23 @@ class staffModule {
     }
   };
 
-  public static loginAdmin = async (req) => {
+  public static checkStaffEmailExists = async (email: string) => {
+    try {
+      const staffDetail = await Staff.findOne({ email: email });
+      return staffDetail ? staffDetail : {};
+    } catch (error) {
+      this.logger.error(error);
+      return errResponse(500, `Something Went Wrong: ${error.message}`);
+    }
+  };
+
+  public static loginStaff = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const staffDetail = await Staff.findOne({ email: email });
-      // validate email & password
-      if (!email && !password) {
-        return errResponse(400, 'Please fill all the required fields!');
-      }
-      // check is user is exist or not
-      if (!staffDetail) {
-        this.logger.error('Staff does not exist!');
-        return errResponse(400, 'Staff does not exist!');
-      }
-      try {
-        // const isMatch = await bcrypt.compare(password, staffDetail.password);
-        if (await bcrypt.compare(password, staffDetail.password)) {
-          return sucResponse(200, 'Staff Login Successful!', staffDetail);
-        } else {
-          this.logger.error('Password Incorrect!');
-          return errResponse(200, 'Password Incorrect!');
-        }
-      } catch (error) {
-        this.logger.error(error);
-        return errResponse(500, `Something Went Wrong: ${error.message}`);
-      }
+      const staff = await Staff.login(email, password);
+      const token = Jwt.getAuthToken({ userId: staff._id });
+      await res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
+      return sucResponse(200, 'User Logged In', staff);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, `Something Went Wrong: ${error.message}`);

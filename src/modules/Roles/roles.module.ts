@@ -8,10 +8,6 @@ class rolesModule {
 
   public static createRole = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
-      }
       const role = new Roles({
         roleName: req.body.roleName,
         permissions: req.body.permissions
@@ -26,11 +22,7 @@ class rolesModule {
 
   public static readRole = async (req: Request) => {
     try {
-      if (!req.body) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
-      }
-      const roleId = req.params.roleId;
+      const roleId = req.params.id;
       const role = await Roles.findById(roleId);
       if (!role) {
         this.logger.error('Role not found');
@@ -57,11 +49,7 @@ class rolesModule {
 
   public static updateRole = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad request');
-        return errResponse(404, 'Bad Request');
-      }
-      const roleId = req.params.roleId;
+      const roleId = req.params.id;
       const role = await Roles.findById(roleId);
       if (role) {
         role.set(req.body);
@@ -79,11 +67,7 @@ class rolesModule {
 
   public static deleteRole = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const roleId = req.params.roleId;
+      const roleId = req.params.id;
       const role = await Roles.findByIdAndDelete(roleId);
       if (!role) {
         this.logger.error('Role member not found!');

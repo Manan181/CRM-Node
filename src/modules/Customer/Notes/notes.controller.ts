@@ -1,69 +1,69 @@
-import rolesModule from './roles.module';
-import Log from '../../helpers/logger';
-import { errResponse } from '../../helpers/utils';
+import notesModule from './notes.module';
+import Log from '../../../helpers/logger';
+import { errResponse } from '../../../helpers/utils';
 
-class RolesController {
+class CustomerController {
   private static logger: any = Log.getLogger();
 
-  public static createRole = async (req, res) => {
+  public static createNote = async (req, res) => {
     try {
       if (!req.body) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
-      const result = await rolesModule.createRole(req);
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static readRole = async (req, res) => {
-    try {
-      if (!req.params) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
-      const result = await rolesModule.readRole(req);
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static readAllRoles = async (req, res) => {
-    try {
-      const result = await rolesModule.readAllRoles();
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static updateRole = async (req, res) => {
-    try {
-      if (!req.params || !req.body) {
-        this.logger.error('Bad request');
-        return errResponse(404, 'Bad Request');
-      }
-      const result = await rolesModule.updateRole(req);
-      return res.status(200).send(result).end();
-    } catch (error) {
-      this.logger.error(error.message);
-      return errResponse(500, error.message);
-    }
-  };
-
-  public static deleteRole = async (req, res) => {
-    try {
-      if (!req.params) {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!');
       }
-      const result = await rolesModule.deleteRole(req);
+      const result = await notesModule.createNote(req);
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static readNote = async (req, res) => {
+    try {
+      if (!req.body) {
+        this.logger.error('Bad request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const result = await notesModule.readNote(req);
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static readAllNotes = async (req, res) => {
+    try {
+      const result = await notesModule.readAllNotes();
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static updateNote = async (req, res) => {
+    try {
+      if (!req.params || !req.body) {
+        this.logger.error('Bad request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const result = await notesModule.updateNote(req);
+      return res.status(200).send(result).end();
+    } catch (error) {
+      this.logger.error(error.message);
+      return errResponse(500, error.message);
+    }
+  };
+
+  public static deleteNote = async (req, res) => {
+    try {
+      if (!req.params) {
+        this.logger.error('Bad request!');
+        return errResponse(404, 'Bad Request!');
+      }
+      const result = await notesModule.deleteNote(req);
       return res.status(200).send(result).end();
     } catch (error) {
       this.logger.error(error.message);
@@ -72,4 +72,4 @@ class RolesController {
   };
 }
 
-export default RolesController;
+export default CustomerController;

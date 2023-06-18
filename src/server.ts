@@ -8,6 +8,8 @@ import config from './config/config';
 import Routes from './routes';
 import { errResponse } from './helpers/utils';
 import fileUpload from 'express-fileupload';
+import timeout from 'connect-timeout';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ class App {
         next();
       }
     });
+    this.app.use(cookieParser());
+    this.app.use(timeout('5s'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
     this.app.use(express.static(`${__dirname}/../../uploads/`)); // Static File Path
