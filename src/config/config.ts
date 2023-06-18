@@ -25,7 +25,6 @@ const config = {
   smtpUserName: process.env.SMTP_USER_NAME,
   smtpPassword: process.env.SMTP_PASSWORD,
   exceptionMail: process.env.EXCEPTION_MAIL,
-  contactProfileImagePath: process.env.CONTACT_PROFILE_IMAGE_PATH,
   adminUrl: process.env.ADMIN_URL
 };
 

@@ -7,15 +7,10 @@ const permissionsSchema = {
 
 const rolesSchema: Schema = new Schema(
   {
-    role: {
-      rodeId: {
-        type: Schema.Types.ObjectId,
-        required: true
-      },
-      roleName: {
-        type: String,
-        required: true
-      }
+    roleName: {
+      type: String,
+      required: true,
+      unique: true
     }
   },
   { timestamps: true }

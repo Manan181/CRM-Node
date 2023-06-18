@@ -38,18 +38,33 @@ const invoiceSchema: Schema = new Schema(
       type: Date,
       required: [true, 'Due Date is required']
     },
-    preventOverdueReminders: {
+    preventSendingOverdueReminders: {
       type: Boolean,
       default: false
     },
-    tags: [], // To-Do
-    paymentModes: [], // To-Do
+    tags: [{ type: String }],
+    paymentModes: [{ type: String }],
     currency: {
       type: String,
       default: 'USD',
       enum: ['USD', 'EUR']
     },
-    saleAgent: {} // To-Do
+    saleAgent: {},
+    recurringInvoice: String,
+    customRecurringDuration: {
+      number: {
+        type: Number,
+        default: 0
+      },
+      duration: {
+        type: String,
+        default: ''
+      }
+    },
+    discountType: String,
+    totalCycles: Number,
+    adminNote: String,
+    items: [{}] // Todo
   },
   { timestamps: true }
 );

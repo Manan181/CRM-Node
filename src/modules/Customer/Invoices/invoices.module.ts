@@ -88,11 +88,7 @@ class invoicesModule {
   // update a invoice
   public static updateInvoice = async (req: Request) => {
     try {
-      if (!req.params) {
-        this.logger.error(404, 'Bad Request!');
-        return errResponse(404, 'Bad Request!');
-      }
-      const invoiceId = req.params.invoiceId;
+      const invoiceId = req.params.id;
       const invoice = await Invoice.findById(invoiceId);
       if (invoice) {
         invoice.set(req.body);
@@ -112,10 +108,10 @@ class invoicesModule {
   public static deleteInvoice = async (req: Request) => {
     try {
       if (!req.params) {
-        this.logger.error(404, 'Bad request!');
+        this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!');
       }
-      const invoiceId = req.params.invoiceId;
+      const invoiceId = req.params.id;
       const invoice = await Invoice.findByIdAndDelete(invoiceId);
       if (!invoice) {
         this.logger.error('Invoice not found!');
