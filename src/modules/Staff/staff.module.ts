@@ -2,7 +2,6 @@ import Staff from './staff.model';
 import { Request, Response } from 'express';
 import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
-import { validateStaffData } from '../../helpers/validations';
 import Jwt from '../../helpers/jwt';
 
 class staffModule {
