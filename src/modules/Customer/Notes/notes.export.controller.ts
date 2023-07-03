@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import Log from '../../../helpers/logger';
 import { errResponse } from '../../../helpers/utils';
 import notesExportModule from './notes.export.module';
@@ -7,15 +8,14 @@ class NotesExportController {
 
   public static ExportNotes = async (req, res) => {
     try {
-      if (!req.params) {
+      if (isEmpty(req.params)) {
         this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await notesExportModule.export(req, res);
-      return res.status(200).send(result).end();
+      await notesExportModule.export(req, res);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, error.message);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }

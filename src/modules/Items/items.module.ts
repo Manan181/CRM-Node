@@ -1,12 +1,12 @@
 import Item from './items.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
 
 class itemsModule {
   private static logger = Log.getLogger();
 
-  public static createItem = async (req: Request) => {
+  public static createItem = async (req: Request, res: Response) => {
     try {
       const item = new Item({
         description: req.body.description,
@@ -18,59 +18,59 @@ class itemsModule {
         itemGroup: req.body.itemGroup
       });
       const savedItem = await item.save();
-      return sucResponse(200, 'Item Saved', savedItem);
+      return sucResponse('Item Saved', res, savedItem);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static readAllItems = async () => {
+  public static readAllItems = async (res: Response) => {
     try {
       const items = await Item.find();
       if (items.length > 0) {
-        return sucResponse(200, `Found ${items.length} items`, items);
+        return sucResponse(`Found ${items.length} items`, res, items);
       } else {
         this.logger.error('No Items Found!');
-        return errResponse(404, 'No Items Found!');
+        return errResponse(404, 'No Items Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static updateItem = async (req: Request) => {
+  public static updateItem = async (req: Request, res: Response) => {
     try {
       const itemId = req.params.id;
       const item = await Item.findById(itemId);
       if (item) {
         item.set(req.body);
         await item.save();
-        return sucResponse(201, 'Updated Item!', item);
+        return sucResponse('Updated Item!', res, item);
       } else {
         this.logger.error('Item Not Found!');
-        return errResponse(404, 'Item Not Found!');
+        return errResponse(404, 'Item Not Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static deleteItem = async (req: Request) => {
+  public static deleteItem = async (req: Request, res: Response) => {
     try {
       const itemId = req.params.id;
       const item = await Item.findByIdAndDelete(itemId);
       if (!item) {
         this.logger.error('Item not found!');
-        return errResponse(404, 'Item Not Found!', item);
+        return errResponse(404, 'Item Not Found!', res, item);
       } else {
-        return sucResponse(200, 'Item Deleted!', item);
+        return sucResponse('Item Deleted!', res, item);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }

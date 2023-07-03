@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
-import { errResponse } from '../../../helpers/utils';
+import { errResponse, sucResponse } from '../../../helpers/utils';
 import { ExportOptions, exportTo } from '../../../helpers/export/config';
 import notesModel from './notes.model';
 import { dataToCsv, dataToPdf, dataToXlsx } from '../../../helpers/export/export';
@@ -54,11 +54,11 @@ class notesExportModule {
         case exportTo.pdf:
           return this.toPdf(notes, customer.company, res);
         default:
-          return errResponse(404, 'Export Option not supported!');
+          return errResponse(404, 'Export Option not supported!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something Went Wrong!!', res, error);
     }
   };
 
@@ -73,14 +73,14 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.xlsx`);
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.status(200).send(result).end();
+        sucResponse('Success', res, result);
       } else {
         this.logger.error(500, `Error Generating Xlsx file`);
-        errResponse(500, 'Something Went Wrong!!');
+        errResponse(500, 'Something Went Wrong!!', res);
       }
     } catch (err) {
       this.logger.error(500, `Error Generating Xlsx file: ${err}`);
-      errResponse(500, 'Something Went Wrong!!', err);
+      errResponse(500, 'Something Went Wrong!!', res, err);
     }
   };
 
@@ -95,14 +95,14 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.csv`);
         res.setHeader('Content-Type', 'text/csv');
-        res.status(200).send(result).end();
+        sucResponse('Success', res, result);
       } else {
         this.logger.error(500, `Error Generating Csv file`);
-        errResponse(500, 'Something Went Wrong!!');
+        errResponse(500, 'Something Went Wrong!!', res);
       }
     } catch (err) {
       this.logger.error(500, `Error Generating Csv file: ${err}`);
-      errResponse(500, 'Something Went Wrong!!', err);
+      errResponse(500, 'Something Went Wrong!!', res, err);
     }
   };
 
@@ -118,14 +118,14 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.pdf`);
-        res.status(200).send(Buffer.from(result)).end();
+        sucResponse('Success', res, Buffer.from(result));
       } else {
         this.logger.error(500, `Error Generating Pdf file`);
-        errResponse(500, 'Something Went Wrong!!');
+        errResponse(500, 'Something Went Wrong!!', res);
       }
     } catch (err) {
       this.logger.error(500, `Error Generating Pdf file: ${err}`);
-      errResponse(500, 'Something Went Wrong!!', err);
+      errResponse(500, 'Something Went Wrong!!', res, err);
     }
   };
 }

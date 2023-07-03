@@ -1,12 +1,12 @@
 import Task from './tasks.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import Log from '../../helpers/logger';
 import { sucResponse, errResponse } from '../../helpers/utils';
 
 class tasksModule {
   private static logger = Log.getLogger();
 
-  public static createTask = async (req: Request) => {
+  public static createTask = async (req: Request, res: Response) => {
     try {
       const task = new Task({
         public: req.body.public,
@@ -28,29 +28,29 @@ class tasksModule {
         taskDescription: req.body.taskDescription
       });
       const savedTask = await task.save();
-      return sucResponse(200, 'Task Saved', savedTask);
+      return sucResponse('Task Saved', res, savedTask);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static readAllTasks = async () => {
+  public static readAllTasks = async (res: Response) => {
     try {
       const tasks = await Task.find();
       if (tasks.length > 0) {
-        return sucResponse(200, `Found ${tasks.length} tasks`, tasks);
+        return sucResponse(`Found ${tasks.length} tasks`, res, tasks);
       } else {
         this.logger.error('No Tasks Found!');
-        return errResponse(404, 'No Tasks Found!');
+        return errResponse(404, 'No Tasks Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static updateTask = async (req: Request) => {
+  public static updateTask = async (req: Request, res: Response) => {
     try {
       const update = {
         public: req.body.public,
@@ -68,30 +68,30 @@ class tasksModule {
       const task = await Task.updateOne({ _id: req.params.id }, { $set: update }, { upsert: true });
       if (task) {
         this.logger.info('Task Updated Successfully!');
-        return sucResponse(201, 'Updated Task!', task);
+        return sucResponse('Updated Task!', res, task);
       } else {
         this.logger.error('Task Not Found!');
-        return errResponse(404, 'Task Not Found!');
+        return errResponse(404, 'Task Not Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static deleteTask = async (req: Request) => {
+  public static deleteTask = async (req: Request, res: Response) => {
     try {
       const taskId = req.params.id;
       const task = await Task.findByIdAndDelete(taskId);
       if (!task) {
         this.logger.error('Task not found!');
-        return errResponse(404, 'Task Not Found!', task);
+        return errResponse(404, 'Task Not Found!', res, task);
       } else {
-        return sucResponse(200, 'Task Deleted!', task);
+        return sucResponse('Task Deleted!', res, task);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }

@@ -26,7 +26,7 @@ export class StaffMiddleware {
 
   public checkCredentials = async (req: Request, res: Response, next: () => void) => {
     // get staff detail by email address
-    const staff: any = await staffModule.checkStaffEmailExists(req.body.email);
+    const staff: any = await staffModule.checkStaffEmailExists(req.body.email, res);
     if (staff) {
       if (staff.id && (await bcrypt.compare(req.body.password, staff.password))) {
         req.body._authentication = staff;

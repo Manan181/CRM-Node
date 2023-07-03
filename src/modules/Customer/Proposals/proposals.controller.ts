@@ -1,15 +1,16 @@
 import proposalsModule from './proposals.module';
 import Log from '../../../helpers/logger';
-import { errResponse } from '../../../helpers/utils';
+import { errResponse, sucResponse } from '../../../helpers/utils';
 import sendEmail from '../../../helpers/sendEmail';
+import { isEmpty } from 'lodash';
 class ContactsController {
   private static logger: any = Log.getLogger();
 
   public static createProposal = async (req, res) => {
     try {
-      if (!req.body) {
+      if (isEmpty(req.body)) {
         this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
       if (req.body.status === 'send') {
         let data = {
@@ -39,8 +40,8 @@ class ContactsController {
       req.body.subTotal = subTotal;
       req.body.total = total;
 
-      const result = await proposalsModule.createProposal(req);
-      return res.status(200).send(result).end();
+      const result = await proposalsModule.createProposal(req, res);
+      return sucResponse('Success', res, result);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -49,12 +50,12 @@ class ContactsController {
 
   public static readProposal = async (req, res) => {
     try {
-      if (!req.params) {
+      if (isEmpty(req.params)) {
         this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.readProposal(req);
-      return res.status(200).send(result).end();
+      const result = await proposalsModule.readProposal(req, res);
+      return sucResponse('Success', res, result);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -63,8 +64,8 @@ class ContactsController {
 
   public static readAllProposals = async (req, res) => {
     try {
-      const result = await proposalsModule.readAllProposals();
-      return res.status(200).send(result).end();
+      const result = await proposalsModule.readAllProposals(res);
+      return sucResponse('Success', res, result);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -73,12 +74,12 @@ class ContactsController {
 
   public static updateProposal = async (req, res) => {
     try {
-      if (!req.params || !req.body) {
+      if (isEmpty(req.params) || isEmpty(req.body)) {
         this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.updateProposal(req);
-      return res.status(200).send(result).end();
+      const result = await proposalsModule.updateProposal(req, res);
+      return sucResponse('Success', res, result);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -87,12 +88,12 @@ class ContactsController {
 
   public static deleteProposal = async (req, res) => {
     try {
-      if (!req.params) {
+      if (isEmpty(req.params)) {
         this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.deleteProposal(req);
-      return res.status(200).send(result).end();
+      const result = await proposalsModule.deleteProposal(req, res);
+      return sucResponse('Success', res, result);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);

@@ -1,5 +1,5 @@
 import Contact from './contacts.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
 import { sucResponse, errResponse } from '../../../helpers/utils';
 import config from '../../../config/config';
@@ -9,11 +9,11 @@ class contactsModule {
   private static logger: any = Log.getLogger();
 
   // create a new contact
-  public static createContact = async (req: Request) => {
+  public static createContact = async (req: Request, res: Response) => {
     try {
       const contact = new Contact({
         customerId: req.body.customerId,
-        profileImageUrl: `${config.adminUrl}/${req.body.fileName}`,
+        profileImageUrl: req?.files?.image ? `${config.adminUrl}/${req.body.fileName}` : null,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -28,30 +28,30 @@ class contactsModule {
         password: req.body.password
       });
       const savedContact = await contact.save();
-      return sucResponse(200, 'Contact Saved!', savedContact);
+      return sucResponse('Contact Saved!', res, savedContact);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // get all contacts
-  public static readAllContacts = async () => {
+  public static readAllContacts = async (res: Response) => {
     try {
       const contacts = await Contact.find();
       if (contacts.length > 0) {
-        return sucResponse(200, `${contacts.length} Contacts Found!`, contacts);
+        return sucResponse(`${contacts.length} Contacts Found!`, res, contacts);
       } else {
-        return errResponse(404, 'No Contacts Found!');
+        return errResponse(404, 'No Contacts Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // Set Contact password from reset password link
-  public static setContactPassword = async (req: Request) => {
+  public static setContactPassword = async (req: Request, res: Response) => {
     try {
       const contact = await Contact.findById(req.body.email);
       if (contact) {
@@ -61,30 +61,30 @@ class contactsModule {
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // read a contact
-  public static readContact = async (req: Request) => {
+  public static readContact = async (req: Request, res: Response) => {
     try {
       const contactId = req.params.id;
       const contact = await Contact.findById(contactId);
       if (!contact) {
         this.logger.error('Contact not found!');
-        return errResponse(404, 'Contact Not Found!', contact);
+        return errResponse(404, 'Contact Not Found!', res);
       } else {
         this.logger.info('Contact Found!', contact);
-        return sucResponse(200, 'Found Contact!', contact);
+        return sucResponse('Found Contact!', res, contact);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // update a contact
-  public static updateContact = async (req: Request) => {
+  public static updateContact = async (req: Request, res: Response) => {
     try {
       const update = {
         profileImageUrl: req.body.profileImageUrl,
@@ -103,31 +103,31 @@ class contactsModule {
       const contact = await Contact.updateOne({ _id: req.params.id }, { $set: update }, { upsert: true });
       if (contact) {
         this.logger.info('Contact Updated Successfully!');
-        return sucResponse(201, 'Updated Contact!', contact);
+        return sucResponse('Updated Contact!', res, contact);
       } else {
         this.logger.error('Contact Not Found!');
-        return errResponse(404, 'Contact Not Found!');
+        return errResponse(404, 'Contact Not Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // delete a contact
-  public static deleteContact = async (req: Request) => {
+  public static deleteContact = async (req: Request, res: Response) => {
     try {
       const contactId = req.params.id;
       const customer = await Contact.findByIdAndDelete(contactId);
       if (!customer) {
         this.logger.error('Contact not found!');
-        return errResponse(404, 'Contact Not Found!', customer);
+        return errResponse(404, 'Contact Not Found!', res);
       } else {
-        return sucResponse(200, 'Contact Deleted!', customer);
+        return sucResponse('Contact Deleted!', res, customer);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }
