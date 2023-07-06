@@ -1,6 +1,6 @@
 import tasksModule from './tasks.module';
 import Log from '../../helpers/logger';
-import { errResponse, sucResponse } from '../../helpers/utils';
+import { errResponse } from '../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class TasksController {
@@ -12,8 +12,7 @@ class TasksController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.createTask(req, res);
-      return sucResponse('Success', res, result);
+      await tasksModule.createTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -22,8 +21,7 @@ class TasksController {
 
   public static readAllTasks = async (req, res) => {
     try {
-      const result = await tasksModule.readAllTasks(res);
-      return sucResponse('Success', res, result);
+      await tasksModule.readAllTasks(res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -36,8 +34,7 @@ class TasksController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.updateTask(req, res);
-      return sucResponse('Success', res, result);
+      await tasksModule.updateTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -50,8 +47,7 @@ class TasksController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.deleteTask(req, res);
-      return sucResponse('Success', res, result);
+      await tasksModule.deleteTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);

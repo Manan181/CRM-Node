@@ -1,6 +1,6 @@
 import proposalsModule from './proposals.module';
 import Log from '../../../helpers/logger';
-import { errResponse, sucResponse } from '../../../helpers/utils';
+import { errResponse } from '../../../helpers/utils';
 import sendEmail from '../../../helpers/sendEmail';
 import { isEmpty } from 'lodash';
 class ContactsController {
@@ -40,8 +40,7 @@ class ContactsController {
       req.body.subTotal = subTotal;
       req.body.total = total;
 
-      const result = await proposalsModule.createProposal(req, res);
-      return sucResponse('Success', res, result);
+      await proposalsModule.createProposal(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -54,8 +53,7 @@ class ContactsController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.readProposal(req, res);
-      return sucResponse('Success', res, result);
+      await proposalsModule.readProposal(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -64,8 +62,7 @@ class ContactsController {
 
   public static readAllProposals = async (req, res) => {
     try {
-      const result = await proposalsModule.readAllProposals(res);
-      return sucResponse('Success', res, result);
+      await proposalsModule.readAllProposals(res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -78,8 +75,7 @@ class ContactsController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.updateProposal(req, res);
-      return sucResponse('Success', res, result);
+      await proposalsModule.updateProposal(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);
@@ -92,8 +88,7 @@ class ContactsController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await proposalsModule.deleteProposal(req, res);
-      return sucResponse('Success', res, result);
+      await proposalsModule.deleteProposal(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, error.message, error);

@@ -1,6 +1,6 @@
 import contactsModule from './contacts.module';
 import Log from '../../../helpers/logger';
-import { errResponse, imageUpload, sucResponse } from '../../../helpers/utils';
+import { errResponse, imageUpload } from '../../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class ContactsController {
@@ -12,13 +12,11 @@ class ContactsController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-
       if (req?.files?.image) {
         const fileName = await imageUpload(req.files.image);
         if (fileName) req.body.fileName = fileName;
       }
-      const result = await contactsModule.createContact(req, res);
-      return sucResponse('Success', res, result);
+      await contactsModule.createContact(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -31,8 +29,7 @@ class ContactsController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await contactsModule.readContact(req, res);
-      return sucResponse('Success', res, result);
+      await contactsModule.readContact(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -41,8 +38,7 @@ class ContactsController {
 
   public static readAllContacts = async (req, res) => {
     try {
-      const result = await contactsModule.readAllContacts(res);
-      return sucResponse('Success', res, result);
+      await contactsModule.readAllContacts(res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -55,8 +51,7 @@ class ContactsController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await contactsModule.setContactPassword(req, res);
-      return sucResponse('Success', res, result);
+      await contactsModule.setContactPassword(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -85,8 +80,7 @@ class ContactsController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await contactsModule.deleteContact(req, res);
-      return sucResponse('Success', res, result);
+      await contactsModule.deleteContact(req, res);
     } catch (error) {
       this.logger.error(error);
       return errResponse(500, 'Something went wrong!', res, error);

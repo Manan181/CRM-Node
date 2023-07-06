@@ -1,6 +1,6 @@
 import itemGroupModule from './itemGroups.module';
 import Log from '../../../helpers/logger';
-import { errResponse, sucResponse } from '../../../helpers/utils';
+import { errResponse } from '../../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class ItemGroupController {
@@ -12,8 +12,7 @@ class ItemGroupController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemGroupModule.createItemGroup(req, res);
-      return sucResponse('Success', res, result);
+      await itemGroupModule.createItemGroup(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -22,8 +21,7 @@ class ItemGroupController {
 
   public static readAllItemGroups = async (req, res) => {
     try {
-      const result = await itemGroupModule.readAllItemGroups(res);
-      return sucResponse('Success', res, result);
+      await itemGroupModule.readAllItemGroups(res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -36,8 +34,7 @@ class ItemGroupController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemGroupModule.updateItemGroup(req, res);
-      return sucResponse('Success', res, result);
+      await itemGroupModule.updateItemGroup(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -50,8 +47,7 @@ class ItemGroupController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemGroupModule.deleteItemGroup(req, res);
-      return sucResponse('Success', res, result);
+      await itemGroupModule.deleteItemGroup(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);

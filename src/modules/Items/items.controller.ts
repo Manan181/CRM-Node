@@ -1,6 +1,6 @@
 import itemsModule from './items.module';
 import Log from '../../helpers/logger';
-import { errResponse, sucResponse } from '../../helpers/utils';
+import { errResponse } from '../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class CustomerController {
@@ -12,8 +12,7 @@ class CustomerController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemsModule.createItem(req, res);
-      return sucResponse('Success', res, result);
+      await itemsModule.createItem(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -22,8 +21,7 @@ class CustomerController {
 
   public static readAllItems = async (req, res) => {
     try {
-      const result = await itemsModule.readAllItems(res);
-      return sucResponse('Success', res, result);
+      await itemsModule.readAllItems(res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -36,8 +34,7 @@ class CustomerController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemsModule.updateItem(req, res);
-      return sucResponse('Success', res, result);
+      await itemsModule.updateItem(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -50,8 +47,7 @@ class CustomerController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await itemsModule.deleteItem(req, res);
-      return sucResponse('Success', res, result);
+      await itemsModule.deleteItem(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);

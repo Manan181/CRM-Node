@@ -64,7 +64,7 @@ class notesExportModule {
 
   private static toXlsx = async (notes, fileName, res: Response) => {
     try {
-      const result = await dataToXlsx(
+      await dataToXlsx(
         notes.map((note) => {
           return note.row;
         }),
@@ -86,7 +86,7 @@ class notesExportModule {
 
   private static toCsv = async (notes, fileName, res: Response) => {
     try {
-      const result = await dataToCsv(
+      await dataToCsv(
         notes.map((note) => {
           return note.row;
         }),
@@ -108,7 +108,7 @@ class notesExportModule {
 
   private static toPdf = async (notes, fileName, res: Response) => {
     try {
-      const result = await dataToPdf(
+      await dataToPdf(
         notes.map((note) => {
           return note.row;
         }),

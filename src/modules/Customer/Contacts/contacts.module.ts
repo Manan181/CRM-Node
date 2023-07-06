@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
 import { sucResponse, errResponse } from '../../../helpers/utils';
 import config from '../../../config/config';
+
 // import bcrypt from 'bcryptjs';
 
 class contactsModule {

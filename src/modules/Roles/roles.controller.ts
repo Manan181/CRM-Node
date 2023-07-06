@@ -1,6 +1,6 @@
 import rolesModule from './roles.module';
 import Log from '../../helpers/logger';
-import { errResponse, sucResponse } from '../../helpers/utils';
+import { errResponse } from '../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class RolesController {
@@ -12,8 +12,7 @@ class RolesController {
         this.logger.error('Bad request');
         return errResponse(404, 'Bad Request', res);
       }
-      const result = await rolesModule.createRole(req, res);
-      return sucResponse('Success', res, result);
+      await rolesModule.createRole(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -26,8 +25,7 @@ class RolesController {
         this.logger.error('Bad request');
         return errResponse(404, 'Bad Request', res);
       }
-      const result = await rolesModule.readRole(req, res);
-      return sucResponse('Success', res, result);
+      await rolesModule.readRole(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -36,8 +34,7 @@ class RolesController {
 
   public static readAllRoles = async (req, res) => {
     try {
-      const result = await rolesModule.readAllRoles(res);
-      return sucResponse('Success', res, result);
+      await rolesModule.readAllRoles(res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -50,8 +47,7 @@ class RolesController {
         this.logger.error('Bad request');
         return errResponse(404, 'Bad Request', res);
       }
-      const result = await rolesModule.updateRole(req, res);
-      return sucResponse('Success', res, result);
+      await rolesModule.updateRole(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -64,8 +60,7 @@ class RolesController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await rolesModule.deleteRole(req, res);
-      return sucResponse('Success', res, result);
+      await rolesModule.deleteRole(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);

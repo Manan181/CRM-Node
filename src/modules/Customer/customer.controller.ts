@@ -1,6 +1,6 @@
 import customerModule from './customer.module';
 import Log from '../../helpers/logger';
-import { errResponse, sucResponse } from '../../helpers/utils';
+import { errResponse } from '../../helpers/utils';
 import { isEmpty } from 'lodash';
 
 class CustomerController {
@@ -12,8 +12,7 @@ class CustomerController {
         this.logger.error('Bad Request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await customerModule.createCustomer(req, res);
-      return sucResponse('Success', res, result);
+      await customerModule.createCustomer(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -26,8 +25,7 @@ class CustomerController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await customerModule.readCustomer(req, res);
-      return sucResponse('Success', res, result);
+      await customerModule.readCustomer(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -36,8 +34,7 @@ class CustomerController {
 
   public static readAllCustomer = async (req, res) => {
     try {
-      const result = await customerModule.readAllCustomer(res);
-      return sucResponse('Success', res, result);
+      await customerModule.readAllCustomer(res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -50,8 +47,7 @@ class CustomerController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await customerModule.updateCustomer(req, res);
-      return sucResponse('Success', res, result);
+      await customerModule.updateCustomer(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
@@ -64,8 +60,7 @@ class CustomerController {
         this.logger.error('Bad request!');
         return errResponse(404, 'Bad Request!', res);
       }
-      const result = await customerModule.deleteCustomer(req, res);
-      return sucResponse('Success', res, result);
+      await customerModule.deleteCustomer(req, res);
     } catch (error) {
       this.logger.error(error.message);
       return errResponse(500, 'Something went wrong!', res, error);
