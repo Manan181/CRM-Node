@@ -48,7 +48,7 @@ class App {
       this.logger.info(`The server is running in port localhost: ${config.port}`);
       this.app.use((err: any, req: any, res: any, next: () => void) => {
         if (err) {
-          errResponse(500, 'Internal Server Error');
+          errResponse(500, 'Internal Server Error', res);
           SendEmail.sendEmail(null, null, [config.exceptionMail], `Admin API (${NODE_ENV}) - Unhandled Crash`, err.stack); // sending exception email
           return;
         }

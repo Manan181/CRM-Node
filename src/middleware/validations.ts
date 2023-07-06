@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectSchema } from 'joi';
 import Log from '../helpers/logger';
+import { errResponse } from '../helpers/utils';
 const logger = Log.getLogger();
 
 export const ValidateJoi = (schema: ObjectSchema) => {
@@ -10,7 +11,7 @@ export const ValidateJoi = (schema: ObjectSchema) => {
       next();
     } catch (error) {
       logger.error(error);
-      res.status(422).json(`Validation Error: ${error}`).end();
+      errResponse(422, `Validation Error: ${error.message}`, res);
     }
   };
 };

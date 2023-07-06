@@ -1,59 +1,56 @@
 import tasksModule from './tasks.module';
 import Log from '../../helpers/logger';
 import { errResponse } from '../../helpers/utils';
+import { isEmpty } from 'lodash';
 
 class TasksController {
   private static logger: any = Log.getLogger();
 
   public static createTask = async (req, res) => {
     try {
-      if (!req.body) {
+      if (isEmpty(req.body)) {
         this.logger.error('Bad Request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.createTask(req);
-      return res.status(200).send(result).end();
+      await tasksModule.createTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, error.message);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   public static readAllTasks = async (req, res) => {
     try {
-      const result = await tasksModule.readAllTasks();
-      return res.status(200).send(result).end();
+      await tasksModule.readAllTasks(res);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, error.message);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   public static updateTask = async (req, res) => {
     try {
-      if (!req.params || !req.body) {
+      if (isEmpty(req.params) || isEmpty(req.body)) {
         this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.updateTask(req);
-      return res.status(200).send(result).end();
+      await tasksModule.updateTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, error.message);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   public static deleteTask = async (req, res) => {
     try {
-      if (!req.params) {
+      if (isEmpty(req.params)) {
         this.logger.error('Bad request!');
-        return errResponse(404, 'Bad Request!');
+        return errResponse(404, 'Bad Request!', res);
       }
-      const result = await tasksModule.deleteTask(req);
-      return res.status(200).send(result).end();
+      await tasksModule.deleteTask(req, res);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, error.message);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }

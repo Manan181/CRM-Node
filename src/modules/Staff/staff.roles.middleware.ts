@@ -1,6 +1,7 @@
 import { NextFunction } from 'express';
-import rolesModel from '../modules/Roles/roles.model';
-import staffModel from '../modules/Staff/staff.model';
+import rolesModel from '../Roles/roles.model';
+import staffModel from './staff.model';
+import { errResponse } from '../../helpers/utils';
 
 export default class StaffRolesMiddleware {
   public static hasPermissions(permission: string) {
@@ -11,8 +12,8 @@ export default class StaffRolesMiddleware {
         const role = await rolesModel.findById(staff.role);
         if (keys[0] in role.permissions && keys[1] in role.permissions[keys[0]]) {
           if (staff.isAdministrator || role.permissions[keys[0]][keys[1]]) next();
-          else return res.status(403).json({ status: 'Fail', statusCode: 403, message: 'Forbidden Request' }).end();
-        } else return res.status(404).json({ status: 'Fail', statusCode: 404, message: 'Permission not Found' }).end();
+          else return errResponse(403, 'Forbidden Request', res);
+        } else return errResponse(404, 'Permission not Found', res);
       } catch (e) {
         return next(e);
       }

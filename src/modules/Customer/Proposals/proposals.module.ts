@@ -1,5 +1,5 @@
 import Proposal from './proposals.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
 import { sucResponse, errResponse } from '../../../helpers/utils';
 
@@ -7,7 +7,7 @@ class proposalsModule {
   private static logger: any = Log.getLogger();
 
   // create a new proposal
-  public static createProposal = async (req: Request) => {
+  public static createProposal = async (req: Request, res: Response) => {
     try {
       const proposal = new Proposal({
         subject: req.body.subject,
@@ -37,48 +37,48 @@ class proposalsModule {
         adjustment: req.body.adjustment
       });
       const savedProposal = await proposal.save();
-      return sucResponse(200, 'Proposal Saved!', savedProposal);
+      return sucResponse('Proposal Saved!', res, savedProposal);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // get all proposals
-  public static readAllProposals = async () => {
+  public static readAllProposals = async (res: Response) => {
     try {
       const proposals = await Proposal.find();
       if (proposals.length > 0) {
-        return sucResponse(200, `${proposals.length} Proposals Found!`, proposals);
+        return sucResponse(`${proposals.length} Proposals Found!`, res, proposals);
       } else {
-        return errResponse(404, 'No Proposals Found!');
+        return errResponse(404, 'No Proposals Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // read a proposal
-  public static readProposal = async (req: Request) => {
+  public static readProposal = async (req: Request, res: Response) => {
     try {
       const proposalId = req.params.id;
       const proposal = await Proposal.findById(proposalId);
       if (!proposal) {
         this.logger.error('Proposal not found!');
-        return errResponse(404, 'Proposal Not Found!', proposal);
+        return errResponse(404, 'Proposal Not Found!', res, proposal);
       } else {
         this.logger.info('Proposal Found!', proposal);
-        return sucResponse(200, 'Found Proposal!', proposal);
+        return sucResponse('Found Proposal!', res, proposal);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // update a proposal
-  public static updateProposal = async (req: Request) => {
+  public static updateProposal = async (req: Request, res: Response) => {
     try {
       const update = {
         subject: req.body.subject,
@@ -110,31 +110,31 @@ class proposalsModule {
       const proposal = await Proposal.updateOne({ _id: req.params.id }, { $set: update }, { upsert: true });
       if (proposal) {
         this.logger.info('Proposal Updated Successfully!');
-        return sucResponse(201, 'Updated Proposal!', proposal);
+        return sucResponse('Updated Proposal!', res, proposal);
       } else {
         this.logger.error('Proposal Not Found!');
-        return errResponse(404, 'Proposal Not Found!');
+        return errResponse(404, 'Proposal Not Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
   // delete a proposal
-  public static deleteProposal = async (req: Request) => {
+  public static deleteProposal = async (req: Request, res: Response) => {
     try {
       const proposalId = req.params.id;
       const proposal = await Proposal.findByIdAndDelete(proposalId);
       if (!proposal) {
         this.logger.error('Proposal not found!');
-        return errResponse(404, 'Proposal Not Found!', proposal);
+        return errResponse(404, 'Proposal Not Found!', res, proposal);
       } else {
-        return sucResponse(200, 'Proposal Deleted!', proposal);
+        return sucResponse('Proposal Deleted!', res, proposal);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 }

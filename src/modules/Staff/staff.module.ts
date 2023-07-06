@@ -35,85 +35,85 @@ class staffModule {
       const token = Jwt.getAuthToken({ userId: staff._id });
       res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
       const savedStaff = await staff.save();
-      return sucResponse(200, 'Staff Saved!', savedStaff);
+      return sucResponse('Staff Saved!', res, savedStaff);
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static readStaff = async (req: Request) => {
+  public static readStaff = async (req: Request, res: Response) => {
     try {
       const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (!staff) {
         this.logger.error('Staff Member Not Found!');
-        return errResponse(404, 'Staff Member Not Found!', staff);
+        return errResponse(404, 'Staff Member Not Found!', res, staff);
       } else {
         this.logger.info('Staff Member Found!', staff);
-        return sucResponse(200, 'Found Staff Member!', staff);
+        return sucResponse('Found Staff Member!', res, staff);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static readAllStaff = async () => {
+  public static readAllStaff = async (res: Response) => {
     try {
       const staffs = await Staff.find();
       if (staffs.length > 0) {
-        return sucResponse(200, `${staffs.length} Staffs Found!`, staffs);
+        return sucResponse(`${staffs.length} Staffs Found!`, res, staffs);
       } else {
-        return errResponse(404, 'No Staff Members Found!');
+        return errResponse(404, 'No Staff Members Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static updateStaff = async (req: Request) => {
+  public static updateStaff = async (req: Request, res: Response) => {
     try {
       const staffId = req.params.id;
       const staff = await Staff.findById(staffId);
       if (staff) {
         staff.set(req.body);
         await staff.save();
-        return sucResponse(201, 'Updated Staff Member', staff);
+        return sucResponse('Updated Staff Member', res, staff);
       } else {
         this.logger.error('Staff Member Not Found');
-        return errResponse(404, 'Staff Member Not Found!');
+        return errResponse(404, 'Staff Member Not Found!', res);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static deleteStaff = async (req: Request) => {
+  public static deleteStaff = async (req: Request, res: Response) => {
     try {
       const staffId = req.params.id;
       const staff = await Staff.findByIdAndDelete(staffId);
       if (!staff) {
         this.logger.error('Staff member not found!');
-        return errResponse(404, 'Staff Member Not Found!', staff);
+        return errResponse(404, 'Staff Member Not Found!', res, staff);
       } else {
-        return sucResponse(200, 'Staff Member Deleted!', staff);
+        return sucResponse('Staff Member Deleted!', res, staff);
       }
     } catch (error) {
       this.logger.error(error.message);
-      return errResponse(500, 'Something Went Wrong!!', error);
+      return errResponse(500, 'Something went wrong!', res, error);
     }
   };
 
-  public static checkStaffEmailExists = async (email: string) => {
+  public static checkStaffEmailExists = async (email: string, res: Response) => {
     try {
       const staffDetail = await Staff.findOne({ email: email });
       return staffDetail ? staffDetail : {};
     } catch (error) {
       this.logger.error(error);
-      return errResponse(500, `Something Went Wrong: ${error.message}`);
+      return errResponse(500, `Something Went Wrong: ${error.message}`, res);
     }
   };
 
@@ -123,10 +123,10 @@ class staffModule {
       const staff = await Staff.login(email, password);
       const token = Jwt.getAuthToken({ userId: staff._id });
       await res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
-      return sucResponse(200, 'User Logged In', staff);
+      return sucResponse('User Logged In', res, staff);
     } catch (error) {
       this.logger.error(error);
-      return errResponse(500, `Something Went Wrong: ${error.message}`);
+      return errResponse(500, `Something Went Wrong: ${error.message}`, res);
     }
   };
 }

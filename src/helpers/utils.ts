@@ -1,19 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Response } from 'express';
 
-let res = (status: string, statusCode: number, message: string, data: object) => {
+let format = (status: string, statusCode: number, message: string, data: object) => {
   return { status, statusCode, message, data };
 };
 
 // Function to create a success response object
-const sucResponse = (statusCode: number, msg: string, data: object) => {
-  return res('Success', statusCode || 200, msg, data);
+const sucResponse = (msg: string, res: Response, data: object) => {
+  return res.status(200).json(format('Success', 200, msg, data)).end();
 };
 
 // Function to create an error response object
-const errResponse = (statusCode: number, msg: string, data = {}) => {
-  return res('Fail', statusCode, msg, data);
+const errResponse = (statusCode: number, msg: string, res: Response, data = {}) => {
+  return res.status(statusCode).json(format('Fail', statusCode, msg, data)).end();
 };
 
 // Function to validate an email address
