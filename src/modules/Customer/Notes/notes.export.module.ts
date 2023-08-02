@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
-import { errResponse, sucResponse } from '../../../helpers/utils';
+import { errResponse } from '../../../helpers/utils';
 import { ExportOptions, exportTo } from '../../../helpers/export/config';
 import notesModel from './notes.model';
 import { dataToCsv, dataToPdf, dataToXlsx } from '../../../helpers/export/export';
