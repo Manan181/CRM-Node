@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Log from '../../../helpers/logger';
-import { errResponse, sucResponse } from '../../../helpers/utils';
+import { errResponse } from '../../../helpers/utils';
 import { ExportOptions, exportTo } from '../../../helpers/export/config';
 import notesModel from './notes.model';
 import { dataToCsv, dataToPdf, dataToXlsx } from '../../../helpers/export/export';
@@ -64,7 +64,7 @@ class notesExportModule {
 
   private static toXlsx = async (notes, fileName, res: Response) => {
     try {
-      await dataToXlsx(
+      const result = await dataToXlsx(
         notes.map((note) => {
           return note.row;
         }),
@@ -73,7 +73,7 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.xlsx`);
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        sucResponse('Success', res, result);
+        res.status(200).send(result).end();
       } else {
         this.logger.error(500, `Error Generating Xlsx file`);
         errResponse(500, 'Something Went Wrong!!', res);
@@ -86,7 +86,7 @@ class notesExportModule {
 
   private static toCsv = async (notes, fileName, res: Response) => {
     try {
-      await dataToCsv(
+      const result = await dataToCsv(
         notes.map((note) => {
           return note.row;
         }),
@@ -95,7 +95,7 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.csv`);
         res.setHeader('Content-Type', 'text/csv');
-        sucResponse('Success', res, result);
+        res.status(200).send(result).end();
       } else {
         this.logger.error(500, `Error Generating Csv file`);
         errResponse(500, 'Something Went Wrong!!', res);
@@ -108,7 +108,7 @@ class notesExportModule {
 
   private static toPdf = async (notes, fileName, res: Response) => {
     try {
-      await dataToPdf(
+      const result = await dataToPdf(
         notes.map((note) => {
           return note.row;
         }),
@@ -118,7 +118,7 @@ class notesExportModule {
       if (result) {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}.pdf`);
-        sucResponse('Success', res, Buffer.from(result));
+        res.status(200).send(Buffer.from(result)).end();
       } else {
         this.logger.error(500, `Error Generating Pdf file`);
         errResponse(500, 'Something Went Wrong!!', res);
